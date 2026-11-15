@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Softboyprem · เช่าร้านค้าออนไลน์</title>
+<meta name="description" content="มีร้านออนไลน์เป็นของคุณเองง่ายกว่าที่คิด หน้าร้านและหลังบ้านพร้อมใช้ รับเงินเข้าบัญชีคุณโดยตรง ระบบสมาชิก แต้ม และแต่งร้านได้ทั้งหมด">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Softboyprem">
+<meta property="og:title" content="เช่าร้านค้าออนไลน์ · มีร้านเป็นของคุณเอง ง่ายกว่าที่คิด">
+<meta property="og:description" content="หน้าร้าน + หลังบ้านพร้อมใช้ รับเงินเข้าบัญชีคุณโดยตรง ระบบสมาชิก แต้ม แต่งร้านได้ทั้งหมด สมัครออนไลน์ได้เลย">
+<meta property="og:url" content="https://softboyprem-shop.github.io/rent/">
+<meta property="og:image" content="https://softboyprem-shop.github.io/og-rent.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://softboyprem-shop.github.io/og-rent.jpg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ร้านค้า">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#07060F">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<style>
+html,body{margin:0;height:100%;touch-action:manipulation;-webkit-text-size-adjust:100%;background:#07060F;overflow:hidden}
+#app{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#EDE4FF}
+#sp{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,#EEE6FF,#E3D4FB);font:600 15px -apple-system,system-ui,sans-serif;color:#5B47A0;transition:opacity .35s}
+#sp img{width:112px;height:112px;border-radius:26px;box-shadow:0 14px 34px -14px rgba(90,60,180,.6)}
+#sp i{width:26px;height:26px;border-radius:50%;border:3px solid rgba(124,77,255,.25);border-top-color:#7C4DFF;animation:r .8s linear infinite}
+@keyframes r{to{transform:rotate(1turn)}}
+#sp.h{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="sp"><img src="/icon-180.png" alt="" id="spi"><i></i><span>กำลังเปิดร้าน…</span></div>
+<iframe id="app" title="Softboyprem" allow="clipboard-read; clipboard-write; fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<script>
+// เก็บการเข้าสู่ระบบให้ร้าน (iOS ไม่เก็บข้อมูลของเว็บที่ถูกฝัง) — รับ/ส่งเฉพาะค่า sbp* กับหน้าร้านของ Google Apps Script เท่านั้น
+window.addEventListener("message",function(ev){var d=ev.data;if(!d||!d.sbpb||!/^https:\/\/[a-z0-9-]+-script\.googleusercontent\.com$/.test(ev.origin))return;
+  try{if(d.sbpb==="hello"){var o={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sbp/.test(k))o[k]=localStorage.getItem(k)}ev.source.postMessage({sbpb:"snap",data:o},ev.origin)}
+  else if(d.sbpb==="set"&&/^sbp/.test(d.k))localStorage.setItem(d.k,String(d.v));
+  else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k);
+  else if(d.sbpb==="title"&&d.t){document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
+</script>
+<script>
+// ลิงก์ร้าน (Web app URL ที่ลงท้ายด้วย /exec) — เปลี่ยนได้ที่บรรทัดนี้บรรทัดเดียว
+var SHOP_URL = "https://script.google.com/macros/s/AKfycbyqOP5dIr4CvbnpPMmwvffKiIowncsooisWGI8PDNoqdZ73m5UgYNqDQ2aYru_AVHAD7w/exec";
+(function(){
+  // ลิงก์ร้านแบบชื่อร้าน: /ชื่อร้าน = หน้าร้าน · /ชื่อร้าน/admin = หลังบ้าน · /rent = หน้าเช่าร้าน
+  var seg = location.pathname.replace(/\/+$/, "").split("/").filter(Boolean).map(function(x){ try { return decodeURIComponent(x); } catch (e) { return x; } });
+  var slug = String(seg[0] || "").toLowerCase(), sub = String(seg[1] || "").toLowerCase();
+  var q = location.search ? location.search.slice(1).replace(/(^|&)s=[^&]*/g, "") .replace(/^&/, "") : "", u = SHOP_URL;
+  var f = document.getElementById("app"), sp = document.getElementById("sp"), msg = sp.querySelector("span");
+  var ok = /^[a-z0-9][a-z0-9-]{2,23}$/.test(slug) && seg.length <= 2 && (!sub || sub === "admin");
+  if (!ok) { sp.querySelector("i").style.display = "none"; msg.innerHTML = 'ไม่พบหน้านี้ · <a href="/" style="color:#5B47A0">กลับหน้าแรก</a>'; return; }
+  if (SHOP_URL.indexOf("script.google.com") < 0) { sp.querySelector("i").style.display = "none"; msg.textContent = "ร้านกำลังตั้งค่า กรุณาลองใหม่ภายหลัง"; return; }
+  var sep = function(){ return u.indexOf("?") < 0 ? "?" : "&"; };
+  if (slug === "rent" && !sub) { u += sep() + "shop=1&rent=1"; msg.textContent = "กำลังเปิด…"; }
+  else { window.SBP_TEN = slug; document.getElementById("spi").style.display = "none";
+    if (sub === "admin") { u += sep() + "s=" + slug; msg.textContent = "กำลังเปิดหลังร้าน…"; }
+    else u += sep() + "shop=1&s=" + slug; }
+  if (q) u += "&" + q;
+  f.onload = function(){ setTimeout(function(){ sp.className = "h"; }, 250); };
+  setTimeout(function(){ sp.className = "h"; }, 9000);
+  f.src = u;
+})();
+</script>
+</body>
+</html>
