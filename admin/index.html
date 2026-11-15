@@ -30,7 +30,8 @@ html,body{margin:0;height:100%;touch-action:manipulation;-webkit-text-size-adjus
 window.addEventListener("message",function(ev){var d=ev.data;if(!d||!d.sbpb||!/^https:\/\/[a-z0-9-]+-script\.googleusercontent\.com$/.test(ev.origin))return;
   try{if(d.sbpb==="hello"){var o={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^sbp/.test(k))o[k]=localStorage.getItem(k)}ev.source.postMessage({sbpb:"snap",data:o},ev.origin)}
   else if(d.sbpb==="set"&&/^sbp/.test(d.k))localStorage.setItem(d.k,String(d.v));
-  else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k)}catch(e){}});
+  else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k);
+  else if(d.sbpb==="title"&&d.t){document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
 </script>
 <script>
 // ลิงก์ร้าน (Web app URL ที่ลงท้ายด้วย /exec) — เปลี่ยนได้ที่บรรทัดนี้บรรทัดเดียว
