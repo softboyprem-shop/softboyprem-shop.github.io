@@ -33,8 +33,8 @@ window.addEventListener("message",function(ev){var d=ev.data;if(!d||!d.sbpb||!/^
   else if(d.sbpb==="set"&&/^sbp/.test(d.k))localStorage.setItem(d.k,String(d.v));
   else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k);
   else if(d.sbpb==="icon"&&window.SBP_TEN&&/^data:image\/png;base64,/.test(d.u||"")&&d.u.length<300000){setIcon(d.u)}
-  else if(d.sbpb==="nf"&&window.SBP_ALTS&&window.SBP_ALTS.length&&d.t===window.SBP_TEN&&(window.SBP_NFS=window.SBP_NFS||[]).indexOf(ev.source)<0){window.SBP_NFS.push(ev.source);window.SBP_ALT=window.SBP_ALTS.shift();window.SBP_SWAP=(window.SBP_SWAP||0)+1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
-  else if(d.sbpb==="title"&&d.t){document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
+  else if(d.sbpb==="nf"&&window.SBP_ALTS&&window.SBP_ALTS.length&&d.t===window.SBP_TEN&&(window.SBP_NFS=window.SBP_NFS||[]).indexOf(ev.source)<0){window.SBP_NFS.push(ev.source);window.SBP_ALT=window.SBP_ALTS.shift();window.SBP_CUR=window.SBP_ALT.split("?")[0];try{localStorage.removeItem(window.SBP_CK)}catch(e){}window.SBP_SWAP=(window.SBP_SWAP||0)+1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
+  else if(d.sbpb==="title"&&d.t){if(window.SBP_CK&&window.SBP_CUR)try{localStorage.setItem(window.SBP_CK,window.SBP_CUR)}catch(e){}document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
 </script>
 <script>
 // ลิงก์ร้าน (Web app URL ที่ลงท้ายด้วย /exec) — เปลี่ยนได้ที่บรรทัดนี้บรรทัดเดียว
@@ -69,6 +69,10 @@ var SHOP_URL = "https://script.google.com/macros/s/AKfycbyqOP5dIr4CvbnpPMmwvffKi
       TEST_URL,
       "https://script.google.com/macros/s/AKfycbx6DP7amofuld9r8fubfNHLVfwOQPtv06IU9_ZJwe6_OFnVZuDTryW3y38T0DmstUIf/exec"
     ];
+    // จำว่าร้านนี้อยู่ระบบไหน ครั้งต่อไปเปิดตรงไปเลย (ไม่ต้องไล่หา)
+    var ck = "sbpsys~" + slug, c = ""; try { c = localStorage.getItem(ck) || ""; } catch (e) {}
+    if (c && c !== SHOP_URL && ALL.indexOf(c) >= 0) { u = u.replace(SHOP_URL, c); SHOP_URL = c; }
+    window.SBP_CK = ck; window.SBP_CUR = SHOP_URL;
     window.SBP_ALTS = ALL.filter(function(x){ return x !== SHOP_URL; }).map(function(x){ return u.replace(SHOP_URL, x); }); }
   f.src = u;
 })();
