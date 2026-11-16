@@ -33,7 +33,7 @@ window.addEventListener("message",function(ev){var d=ev.data;if(!d||!d.sbpb||!/^
   else if(d.sbpb==="set"&&/^sbp/.test(d.k))localStorage.setItem(d.k,String(d.v));
   else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k);
   else if(d.sbpb==="icon"&&window.SBP_TEN&&/^data:image\/png;base64,/.test(d.u||"")&&d.u.length<300000){setIcon(d.u)}
-  else if(d.sbpb==="nf"&&window.SBP_ALTS&&window.SBP_ALTS.length&&d.t===window.SBP_TEN&&!window.SBP_WAIT){window.SBP_WAIT=1;window.SBP_ALT=window.SBP_ALTS.shift();window.SBP_SWAP=(window.SBP_SWAP||0)+1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){window.SBP_WAIT=0;setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
+  else if(d.sbpb==="nf"&&window.SBP_ALTS&&window.SBP_ALTS.length&&d.t===window.SBP_TEN&&(window.SBP_NFS=window.SBP_NFS||[]).indexOf(ev.source)<0){window.SBP_NFS.push(ev.source);window.SBP_ALT=window.SBP_ALTS.shift();window.SBP_SWAP=(window.SBP_SWAP||0)+1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
   else if(d.sbpb==="title"&&d.t){document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
 </script>
 <script>
