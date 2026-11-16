@@ -33,7 +33,7 @@ window.addEventListener("message",function(ev){var d=ev.data;if(!d||!d.sbpb||!/^
   else if(d.sbpb==="set"&&/^sbp/.test(d.k))localStorage.setItem(d.k,String(d.v));
   else if(d.sbpb==="del"&&/^sbp/.test(d.k))localStorage.removeItem(d.k);
   else if(d.sbpb==="icon"&&window.SBP_TEN&&/^data:image\/png;base64,/.test(d.u||"")&&d.u.length<300000){setIcon(d.u)}
-  else if(d.sbpb==="nf"&&window.SBP_ALT&&!window.SBP_SWAP){window.SBP_SWAP=1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
+  else if(d.sbpb==="nf"&&window.SBP_ALTS&&window.SBP_ALTS.length&&d.t===window.SBP_TEN&&!window.SBP_WAIT){window.SBP_WAIT=1;window.SBP_ALT=window.SBP_ALTS.shift();window.SBP_SWAP=(window.SBP_SWAP||0)+1;var f=document.getElementById("app"),sp=document.getElementById("sp");sp.className="";sp.querySelector("span").textContent="กำลังค้นหาร้าน…";f.onload=function(){window.SBP_WAIT=0;setTimeout(function(){sp.className="h"},250)};f.src=window.SBP_ALT}
   else if(d.sbpb==="title"&&d.t){document.title=String(d.t).slice(0,60);var m=document.querySelector('meta[name="apple-mobile-web-app-title"]');if(m&&window.SBP_TEN)m.content=document.title}}catch(e){}});
 </script>
 <script>
@@ -63,7 +63,13 @@ var SHOP_URL = "https://script.google.com/macros/s/AKfycbyqOP5dIr4CvbnpPMmwvffKi
   f.onload = function(){ setTimeout(function(){ sp.className = "h"; }, 250); };
   setTimeout(function(){ sp.className = "h"; }, 9000);
   // ร้านอาจสร้างไว้อีกระบบ (ร้านจริง ⇄ ทดสอบ) — ถ้าระบบนี้ตอบว่า "ไม่พบร้านนี้" จะลองอีกระบบให้อัตโนมัติ 1 ครั้ง
-  if (window.SBP_TEN) { var PROD_URL = "https://script.google.com/macros/s/AKfycbyqOP5dIr4CvbnpPMmwvffKiIowncsooisWGI8PDNoqdZ73m5UgYNqDQ2aYru_AVHAD7w/exec"; window.SBP_ALT = u.replace(SHOP_URL, SHOP_URL === TEST_URL ? PROD_URL : TEST_URL); }
+  // รายชื่อระบบทั้งหมด (เพิ่มลิงก์ /exec ของไฟล์ใหม่ต่อท้ายได้) — ร้านอยู่ไฟล์ไหนก็เปิดได้
+  if (window.SBP_TEN) { var ALL = [
+      "https://script.google.com/macros/s/AKfycbyqOP5dIr4CvbnpPMmwvffKiIowncsooisWGI8PDNoqdZ73m5UgYNqDQ2aYru_AVHAD7w/exec",
+      TEST_URL,
+      "https://script.google.com/macros/s/AKfycbx6DP7amofuld9r8fubfNHLVfwOQPtv06IU9_ZJwe6_OFnVZuDTryW3y38T0DmstUIf/exec"
+    ];
+    window.SBP_ALTS = ALL.filter(function(x){ return x !== SHOP_URL; }).map(function(x){ return u.replace(SHOP_URL, x); }); }
   f.src = u;
 })();
 </script>
